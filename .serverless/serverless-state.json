@@ -1,0 +1,291 @@
+{
+  "service": {
+    "service": "kotlin-benchmark",
+    "serviceObject": {
+      "name": "kotlin-benchmark"
+    },
+    "provider": {
+      "stage": "production",
+      "variableSyntax": "\\${([^{}]+?)}",
+      "name": "aws",
+      "runtime": "java8",
+      "region": "ap-northeast-1",
+      "memorySize": 512,
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "KotlinDashbenchmarkLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/production-kotlin-benchmark-kotlin"
+            }
+          },
+          "JavaDashbenchmarkLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/production-kotlin-benchmark-java"
+            }
+          },
+          "KotlinDashbenchmarkLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/kotlin-benchmark/production/1592459560573-2020-06-18T05:52:40.573Z/benchmark-1.0.jar"
+              },
+              "FunctionName": "production-kotlin-benchmark-kotlin",
+              "Handler": "jp.co.valus.lambda_benchmark.KotlinBenchmarkHandler",
+              "MemorySize": 512,
+              "Role": "arn:aws:iam::290494093610:role/lambda_simple_exec_role",
+              "Runtime": "java8",
+              "Timeout": 30,
+              "Environment": {
+                "Variables": {
+                  "max_loop_num": "1000000"
+                }
+              }
+            },
+            "DependsOn": [
+              "KotlinDashbenchmarkLogGroup"
+            ]
+          },
+          "KotlinDashbenchmarkLambdaVersionTFScOFmPRftxlasuV14Lt3L1M9qrpgPkmVRHTHkE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "KotlinDashbenchmarkLambdaFunction"
+              },
+              "CodeSha256": "ewoSDbmoZbY/1/57IWZ3SJrnRqoCZpvfW3VUwt8uWCM="
+            }
+          },
+          "JavaDashbenchmarkLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/kotlin-benchmark/production/1592459560573-2020-06-18T05:52:40.573Z/benchmark-1.0.jar"
+              },
+              "FunctionName": "production-kotlin-benchmark-java",
+              "Handler": "jp.co.valus.lambda_benchmark.JavaBenchmarkHandler",
+              "MemorySize": 512,
+              "Role": "arn:aws:iam::290494093610:role/lambda_simple_exec_role",
+              "Runtime": "java8",
+              "Timeout": 30,
+              "Environment": {
+                "Variables": {
+                  "max_loop_num": "1000000"
+                }
+              }
+            },
+            "DependsOn": [
+              "JavaDashbenchmarkLogGroup"
+            ]
+          },
+          "JavaDashbenchmarkLambdaVersion5A5ljK5gbYO49710qrd3GEwKBDdiunJ79jUeaeqVOZo": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "JavaDashbenchmarkLambdaFunction"
+              },
+              "CodeSha256": "ewoSDbmoZbY/1/57IWZ3SJrnRqoCZpvfW3VUwt8uWCM="
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "KotlinDashbenchmarkLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "KotlinDashbenchmarkLambdaVersionTFScOFmPRftxlasuV14Lt3L1M9qrpgPkmVRHTHkE"
+            }
+          },
+          "JavaDashbenchmarkLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "JavaDashbenchmarkLambdaVersion5A5ljK5gbYO49710qrd3GEwKBDdiunJ79jUeaeqVOZo"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "custom": {
+      "defaultStage": "dev",
+      "prefix": "production-kotlin-benchmark"
+    },
+    "pluginsData": {},
+    "functions": {
+      "kotlin-benchmark": {
+        "timeout": 30,
+        "handler": "jp.co.valus.lambda_benchmark.KotlinBenchmarkHandler",
+        "name": "production-kotlin-benchmark-kotlin",
+        "role": "arn:aws:iam::290494093610:role/lambda_simple_exec_role",
+        "environment": {
+          "max_loop_num": "1000000"
+        },
+        "events": [],
+        "package": {},
+        "memory": 512,
+        "runtime": "java8",
+        "vpc": {},
+        "versionLogicalId": "KotlinDashbenchmarkLambdaVersionTFScOFmPRftxlasuV14Lt3L1M9qrpgPkmVRHTHkE"
+      },
+      "java-benchmark": {
+        "timeout": 30,
+        "handler": "jp.co.valus.lambda_benchmark.JavaBenchmarkHandler",
+        "name": "production-kotlin-benchmark-java",
+        "role": "arn:aws:iam::290494093610:role/lambda_simple_exec_role",
+        "environment": {
+          "max_loop_num": "1000000"
+        },
+        "events": [],
+        "package": {},
+        "memory": 512,
+        "runtime": "java8",
+        "vpc": {},
+        "versionLogicalId": "JavaDashbenchmarkLambdaVersion5A5ljK5gbYO49710qrd3GEwKBDdiunJ79jUeaeqVOZo"
+      }
+    },
+    "serviceFilename": "serverless.yml",
+    "layers": {},
+    "isDashboardMonitoringPreconfigured": false
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/kotlin-benchmark/production/1592459560573-2020-06-18T05:52:40.573Z",
+    "artifact": "benchmark-1.0.jar"
+  }
+}

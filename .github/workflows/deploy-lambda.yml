@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
-          with:
-            java-version: 8
+        with:
+          java-version: 8
       - name: Build
-          run: ./gradlew build
+        run: ./gradlew build
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -30,15 +30,15 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY__{0}', github.event.deployment.environment)] }}
 
       - name: Update Deployment Status
-          if: always()
-          run: |
-            curl \
-              -H "Authorization: token ${{ github.token }}" \
-              -X POST \
-              -d "{ \"state\": \"${${{ format('DEPLOYMENT_STATE__{0}', job.status) }}}\" }" \
-              https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}/statuses
-          env:
-            # ジョブのステータスにより変化する値。環境変数名が大文字・小文字を区別するため、job.statusの部分は小文字の部分が混ざっている。
-            DEPLOYMENT_STATE__Success: success
-            DEPLOYMENT_STATE__Cancelled: error
-            DEPLOYMENT_STATE__Failure: error
+        if: always()
+        run: |
+          curl \
+            -H "Authorization: token ${{ github.token }}" \
+            -X POST \
+            -d "{ \"state\": \"${${{ format('DEPLOYMENT_STATE__{0}', job.status) }}}\" }" \
+            https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}/statuses
+        env:
+          # ジョブのステータスにより変化する値。環境変数名が大文字・小文字を区別するため、job.statusの部分は小文字の部分が混ざっている。
+          DEPLOYMENT_STATE__Success: success
+          DEPLOYMENT_STATE__Cancelled: error
+          DEPLOYMENT_STATE__Failure: error

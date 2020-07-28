@@ -4,6 +4,9 @@ on:
   deployment
 
 jobs:
+  log-params:
+    steps:
+      run: echo "payload ${{github.event.deployment.payload}}"
   build-and-deploy:
     if: contains(github.event.deployment.payload, 'lambda')
     runs-on: ubuntu-latest

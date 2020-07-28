@@ -1,14 +1,12 @@
 package jp.co.valus.lambda_benchmark
 
 import org.eclipse.egit.github.core.client.GitHubClient
-import org.slf4j.LoggerFactory
 
 
 class GithubActionsDeployService(githubAccessToken: String) {
 
     companion object {
-        private const val GITHUB_URI_DEPLOYMENT = "repos/nabesuke0/lambda_benchmark_k_j/deployments"
-        private val LOG = LoggerFactory.getLogger(this::class.java)
+        private const val GITHUB_URI_DEPLOYMENT = "/repos/nabesuke0/lambda_benchmark_k_j/deployments"
     }
 
     private val githubClient = GitHubClient().apply {
@@ -16,14 +14,14 @@ class GithubActionsDeployService(githubAccessToken: String) {
     }
 
     fun deployLambda(environment: String) {
-        LOG.info("deployLambda : $environment")
+        println("deployLambda : $environment")
 
         try {
             githubClient.post<DeployRequest>(
                 GITHUB_URI_DEPLOYMENT,
                 DeployRequest(
                     payload = mapOf(
-                        "deploy_type" to "ps2-lambda",
+                        "deploy_type" to "lambda",
                         "environment" to environment
                     ),
                     description = "deployment : $environment"
@@ -31,7 +29,7 @@ class GithubActionsDeployService(githubAccessToken: String) {
                 DeployRequest::class.java
             )
         } catch (e: Exception) {
-            LOG.info("deploy failure", e)
+            println("deploy failure : " + e.localizedMessage)
         }
     }
 

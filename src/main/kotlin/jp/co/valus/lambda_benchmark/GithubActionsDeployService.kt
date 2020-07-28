@@ -1,5 +1,6 @@
 package jp.co.valus.lambda_benchmark
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.eclipse.egit.github.core.client.GitHubClient
 
 
@@ -33,6 +34,7 @@ class GithubActionsDeployService(githubAccessToken: String) {
         }
     }
 
+    @JsonSerialize
     data class DeployRequest(
         val ref: String = "master",
         val auto_merge: Boolean = false,

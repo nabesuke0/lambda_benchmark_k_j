@@ -5,6 +5,7 @@ on:
 
 jobs:
   log-params:
+    runs-on: ubuntu-latest
     steps:
       - name: output payload.
         run: echo "payload ${{github.event.deployment.payload}}"

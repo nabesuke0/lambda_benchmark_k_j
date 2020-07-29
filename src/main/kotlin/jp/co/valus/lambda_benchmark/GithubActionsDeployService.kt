@@ -21,10 +21,7 @@ class GithubActionsDeployService(githubAccessToken: String) {
             githubClient.post<DeployRequest>(
                 GITHUB_URI_DEPLOYMENT,
                 DeployRequest(
-                    payload = mapOf(
-                        "deploy_type" to "lambda",
-                        "environment" to environment
-                    ),
+                    payload = "deploy lambda",
                     description = "deployment : $environment build"
                 ),
                 DeployRequest::class.java
@@ -38,7 +35,7 @@ class GithubActionsDeployService(githubAccessToken: String) {
     data class DeployRequest(
         val ref: String = "master",
         val auto_merge: Boolean = false,
-        val payload: Map<String, String>,
+        val payload: String,
         val description: String
     )
 }

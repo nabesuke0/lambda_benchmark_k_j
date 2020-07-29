@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: output payload.
-        run: echo "payload ${{github.event.deployment.payload}}"
+        run: echo "payload ${{github.event.deployment.payload.deploy_type}}"
   build-and-deploy:
-    if: contains(github.event.deployment.payload, 'lambda')
+    if: contains(github.event.deployment.payload.deploy_type, 'lambda')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

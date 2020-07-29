@@ -25,7 +25,7 @@ class GithubActionsDeployService(githubAccessToken: String) {
                         "deploy_type" to "lambda",
                         "environment" to environment
                     ),
-                    description = "deployment : $environment"
+                    description = "deployment : $environment build"
                 ),
                 DeployRequest::class.java
             )
